@@ -22,7 +22,7 @@ function Input({ type, placeHolder, value, onChange }: Props) {
       <input
         type={type}
         placeholder={placeHolder}
-        className="input input-primary text-xl"
+        className="input input-primary text-xl {type}==='password'&& input-"
         value={value}
         onChange={onChange}
       ></input>

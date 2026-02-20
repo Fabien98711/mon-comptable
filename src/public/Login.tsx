@@ -1,21 +1,32 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import Input from "../component/form/Input";
 import { Link } from "react-router-dom";
-import SignIn from "./SignIn";
+
 import Form from "../component/form/Form";
+import supabase from "../utils/supabase";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [identifiant, setIdentifiant] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const handleSubmit = () => {
-    console.log(password.length, identifiant.length);
+  const handleSubmit = async () => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: identifiant,
+      password: password,
+    });
+    if (error) {
+      console.log("impossible de se connecter");
+    } else {
+      navigate("/dashboard");
+    }
   };
   const isButtonDisabled = identifiant.length < 4 || password.length < 6;
 
   return (
     <Form>
       <Input
-        placeHolder="identifiant"
+        placeHolder="email"
         type="email"
         value={identifiant}
         onChange={(e) => setIdentifiant(e.target.value)}
@@ -26,6 +37,11 @@ function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       ></Input>
+      <p>
+        <Link to="/sign-in" className="text-blue-500 hover:underline">
+          Mot de passe oublié?
+        </Link>
+      </p>
       <button
         className="btn btn-primary"
         onClick={handleSubmit}
@@ -35,9 +51,9 @@ function Login() {
       </button>
 
       <p>
-        Vous n'avez pas de compte?{" "}
+        Pas encore de compte?{" "}
         <Link to="/sign-in" className="text-blue-500 hover:underline">
-          Inscrivez-vous
+          Créez un compte
         </Link>
       </p>
     </Form>
