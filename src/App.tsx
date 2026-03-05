@@ -20,6 +20,7 @@ function ProtectedRoute() {
         data: { user },
       } = await supabase.auth.getUser();
       setIsAuthenticated(!!user);
+      console.log(user.id);
     };
     CkeckSession();
   }, []);
